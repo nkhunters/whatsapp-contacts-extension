@@ -106,5 +106,7 @@ function scanContacts() {
         };
       }
     }, 500);
+
+    return Promise.resolve("Dummy response to keep the console quiet");
   });
 }
