@@ -86,17 +86,29 @@ function scanContacts() {
         sideDiv.insertBefore(myContent, contentDiv);
 
         document.getElementById("save").onclick = function saveContacts() {
-          fetch("http://api.earneasy24.com/api/saveContacts", {
+          fetch("https://api.earneasy24.com/api/saveContactsAndGetExcel", {
             method: "POST",
             credentials: "same-origin",
             headers: {
-              Accept: "application/json, text/plain, */*",
+              // Accept: "application/json, text/plain, */*",
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ numbers: numbers }),
           })
-            .then((res) => res.json())
-            .then((res) => {
+            .then((response) => response.blob())
+            //.then((res) => res.json())
+            // .then((res) => {
+            //   alert("Contacts saved");
+            //   sideDiv.removeChild(myContent);
+            // })
+            .then((blob) => {
+              var url = window.URL.createObjectURL(blob);
+              var a = document.createElement("a");
+              a.href = url;
+              a.download = "contacts.xlsx";
+              document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+              a.click();
+              a.remove(); //afterwards we remove the element again
               alert("Contacts saved");
               sideDiv.removeChild(myContent);
             })
